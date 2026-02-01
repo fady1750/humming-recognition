@@ -100,7 +100,7 @@ class SimilarityMatcher:
                 mfcc1 = mfcc1.T
             if mfcc2.shape[0] > mfcc2.shape[1]:
                 mfcc2 = mfcc2.T
-            
+
             # Subsample if sequences are very long (for speed)
             max_length = 500
             if mfcc1.shape[1] > max_length:
@@ -109,23 +109,23 @@ class SimilarityMatcher:
             if mfcc2.shape[1] > max_length:
                 step = max(1, mfcc2.shape[1] // max_length)
                 mfcc2 = mfcc2[:, ::step]
-            
+
             # Calculate DTW distance
             distance = self.dtw_distance(mfcc1, mfcc2)
-            
+
             # Normalize by number of features and average length
             avg_length = (mfcc1.shape[1] + mfcc2.shape[1]) / 2
             num_features = mfcc1.shape[0]
-            
+
             normalized_distance = distance / (avg_length * num_features)
-            
+
             # Convert to similarity score (0-100)
             # Empirically calibrated thresholds:
             # Best match (same song): 6.0-6.5 → 80-100%
             # Good match: 6.5-7.0 → 50-80%
             # Weak match: 7.0-7.5 → 20-50%
             # Poor match: 7.5+ → 0-20%
-            
+
             if normalized_distance <= 6.0:
                 similarity = 100
             elif normalized_distance <= 6.5:
@@ -142,11 +142,11 @@ class SimilarityMatcher:
                 similarity = 20 - (normalized_distance - 7.5) * 40
             else:
                 similarity = 0
-            
+
             similarity = max(0, min(100, similarity))
-            
+
             return similarity
-            
+
         except Exception as e:
             print(f"    ⚠️ MFCC similarity error: {e}")
             return 0.0
@@ -230,10 +230,10 @@ class SimilarityMatcher:
         """
         if weights is None:
             weights = {
-                'pitch': 0.50,      # Increased pitch weight
-                'contour': 0.25,    # Melody shape
-                'mfcc': 0.15,       # Reduced MFCC weight
-                'chroma': 0.10      # Harmony
+                'pitch': 0.60,      # Increased pitch weight
+                'contour': 0.30,    # Melody shape
+                'mfcc': 0.07,       # Reduced MFCC weight
+                'chroma': 0.03      # Harmony
             }
         
         scores = {}
