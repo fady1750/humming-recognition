@@ -18,9 +18,8 @@ const ResultDisplay = ({ results }) => {
                     </div>
                     <p className="similarity-score">{best_match.similarity}% Match</p>
                     <div className="score-breakdown">
+                        <span>Melody: {best_match.pitch_score}%</span>
                         <span>Pitch: {best_match.pitch_score}%</span>
-                        <span>MFCC: {best_match.mfcc_score}%</span>
-                        <span>Chroma: {best_match.chroma_score}%</span>
                     </div>
                 </div>
             </div>

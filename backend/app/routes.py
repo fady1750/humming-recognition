@@ -209,10 +209,19 @@ def upload_humming():
         # Get top 5
         top_matches = results[:5]
         best_match = results[0] if results else None
+
+        # ADD THIS CHECK:
+        if best_match and best_match['similarity'] < 70:
+            return jsonify({
+                'success': False,
+                'error': 'No confident match found. Please hum more clearly or for longer.',
+                'top_matches': top_matches
+            }), 200
         
         print(f"\n🎯 BEST MATCH: {best_match['title']} by {best_match['artist']}")
         print(f"   Similarity: {best_match['similarity']}%")
-        print(f"   Pitch: {best_match['pitch_score']}% | MFCC: {best_match['mfcc_score']}% | Chroma: {best_match['chroma_score']}%")
+        print(f"   Pitch: {best_match['pitch_score']}%")
+        print(f"   Melody Intervals: {individual_scores['pitch']:.1f}%")
         print("="*60 + "\n")
         
         # Clean up uploaded file
